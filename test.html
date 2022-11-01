@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <canvas id="canvas" height="720" width="1280"></canvas>
+    <script>
+        const ctx = document.getElementById("canvas").getContext('2d');
+        
+        const split = 4
+        const wd = 320 / split
+        const length = 6
+        let x = 0;
+        let y1 = 0;
+        let y2 = 0;
+        let y3 = 0;
+        let y4 = 0;
+        const ws1 = new WebSocket("wss://wsecho.kokoa.dev/cam/1")
+        ws1.onmessage = function (event) {
+            const data = event.data
+            if(data === "reset") location.reload()
+            for (let i = 0; i < data.length; i += length) {
+                ctx.fillStyle = "#" + data.slice(i, i + length);
+                ctx.fillRect(i / length , y1, 1, 1);
+            }
+            y1 += 1
+        }
+        ws1.onclose = function() {
+            location.reload()
+        }
+    </script>
+</body>
+
+</html>
